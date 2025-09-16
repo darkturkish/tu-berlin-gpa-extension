@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GPA Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 12px;
+        width: 320px;
+        background-color: #ffffff;
+        color: #000000;
+      }
+
+      h3 {
+        margin-top: 0;
+        color: #d30000; /* TU Berlin red */
+        border-bottom: 2px solid #d30000;
+        padding-bottom: 5px;
+      }
+
+      button {
+        background-color: #d30000;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        margin-top: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background-color: #a00000;
+      }
+
+      #result {
+        margin-top: 12px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      #courses {
+        margin-top: 12px;
+        font-size: 12px;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th {
+        background-color: #d30000;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+      }
+
+      th, td {
+        border: 1px solid #ccc;
+        padding: 4px 6px;
+        text-align: left;
+      }
+
+      #exportBtn {
+        display: none; /* hidden until GPA calculated */
+      }
+
+      .footer {
+        margin-top: 14px;
+        font-size: 11px;
+        color: #444;
+      }
+
+      .footer a {
+        color: #d30000;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>TU Berlin GPA Calculator</h3>
+    <button id="calcBtn">Calculate GPA</button>
+    <button id="exportBtn">Export as CSV</button>
+
+    <div id="result"></div>
+    <div id="courses"></div>
+
+    <div class="footer">
+      <p>Disclaimer: Not affiliated with TU Berlin. Data never leaves your browser.</p>
+      <p><a href="https://github.com/YOUR_GITHUB_USERNAME/tu-berlin-gpa-extension" target="_blank">View on GitHub</a></p>
+    </div>
+
+    <!-- All logic in popup.js -->
+    <script src="popup.js"></script>
+  </body>
+</html>
