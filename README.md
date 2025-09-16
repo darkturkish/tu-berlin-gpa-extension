@@ -14,7 +14,7 @@ All calculations are done **locally in your browser** — no data is ever sent a
 ## Installation (Development)
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/tu-berlin-gpa-extension.git
+   git clone https://github.com/darkturkish/tu-berlin-gpa-extension.git
 2.  Open Chrome and go to chrome://extensions/
 3. Enable Developer Mode
 4. Click Load unpacked and select the project folder
