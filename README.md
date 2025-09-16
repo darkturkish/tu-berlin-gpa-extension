@@ -7,7 +7,7 @@ All calculations are done **locally in your browser** — no data is ever sent a
 - Automatically detects your transcript table
 - Calculates weighted GPA
 - Deduplicates duplicate module names
-- Export course list + GPA as CSV
+- Export course list + GPA + Credits as CSV
 - Works fully offline
 - Open source under MIT License
 
@@ -16,9 +16,9 @@ All calculations are done **locally in your browser** — no data is ever sent a
    ```bash
    git clone https://github.com/darkturkish/tu-berlin-gpa-extension.git
 2.  Open Chrome and go to chrome://extensions/
-3. Enable Developer Mode
-4. Click Load unpacked and select the project folder
-5. Open TU Berlin transcript page and 
+3. Click Load unpacked and select the project folder
+4. Open TU Berlin transcript page
+5. Run it from Extensions and Press Calculate GPA
 
 ## Disclaimer
 This project is not affiliated with or endorsed by TU Berlin.
