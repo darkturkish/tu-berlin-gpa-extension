@@ -5,9 +5,7 @@
   "description": "Calculate your weighted GPA from your TU Berlin transcript page.",
   "permissions": ["scripting", "tabs", "activeTab"],
   "host_permissions": [
-    "https://tuport.sap.tu-berlin.de/*",
-    "https://aagw.zecm.tu-berlin.de/*",
-    "https://*.tu-berlin.de/*"
+    "https://aagw.zecm.tu-berlin.de/*"
   ],
   "action": {
     "default_popup": "popup.html",
