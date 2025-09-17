@@ -3,7 +3,7 @@
   "name": "TU Berlin GPA Calculator",
   "version": "1.0",
   "description": "Calculate your weighted GPA from your TU Berlin transcript page.",
-  "permissions": ["scripting", "tabs", "activeTab"],
+  "permissions": ["scripting", "activeTab"],
   "host_permissions": [
     "https://aagw.zecm.tu-berlin.de/*"
   ],

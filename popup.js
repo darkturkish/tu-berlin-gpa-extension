@@ -1,10 +1,8 @@
 document.getElementById("calcBtn").addEventListener("click", async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-  // First try to access the iframe directly
+  // Inject the GPA calculation function into the active tab
   chrome.scripting.executeScript(
     {
-      target: { tabId: tab.id, allFrames: true },
+      target: { tabId: (await chrome.tabs.query({ active: true, currentWindow: true }))[0].id, allFrames: true },
       func: findAndCalculateFromIframe
     },
     (injectionResults) => {
@@ -17,8 +15,7 @@ document.getElementById("calcBtn").addEventListener("click", async () => {
       coursesDiv.innerHTML = "";
       if (exportBtn) exportBtn.style.display = "none";
 
-      // Find the first successful result
-      const validResults = injectionResults
+      const validResults = (injectionResults || [])
         .map(r => r.result)
         .filter(val => val !== null && val !== undefined);
 
@@ -43,7 +40,6 @@ document.getElementById("calcBtn").addEventListener("click", async () => {
           html += "</table>";
           coursesDiv.innerHTML = html;
 
-          // show export button
           if (exportBtn) exportBtn.style.display = "inline-block";
         } else {
           resultDiv.textContent = "Found frames but no transcript data";
@@ -71,14 +67,13 @@ function findAndCalculateFromIframe() {
         const grade = parseFloat(gradeText);
         const credits = parseFloat(creditText);
 
-        // only keep if grade + credits are valid numbers
         if (!isNaN(grade) && !isNaN(credits) && credits > 0) {
           rawCourses.push({ courseName, grade, credits });
         }
       }
     });
 
-    // Deduplicate (prefer longer name if duplicate found)
+    // Deduplicate
     let courses = [];
     rawCourses.forEach(c => {
       const duplicate = courses.find(existing =>
@@ -100,7 +95,6 @@ function findAndCalculateFromIframe() {
       return { error: "No valid courses found in this frame" };
     }
 
-    // GPA calculation
     let totalWeighted = 0, totalCredits = 0;
     courses.forEach(c => {
       totalWeighted += c.grade * c.credits;
@@ -127,10 +121,11 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   if (!courses.length) return;
 
   let csv = [];
-  csv.push(["Course", "Grade", "Credits"].join(",")); // header row
-
+  csv.push(["Course", "Grade", "Credits"].join(","));
   courses.forEach(c => {
-    csv.push([c.courseName, c.grade, c.credits].map(val => `"${String(val).replace(/"/g, '""')}"`).join(","));
+    csv.push([c.courseName, c.grade, c.credits]
+      .map(val => `"${String(val).replace(/"/g, '""')}"`)
+      .join(","));
   });
 
   const blob = new Blob([csv.join("\n")], { type: "text/csv" });
@@ -144,4 +139,3 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
-
