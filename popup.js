@@ -27,15 +27,20 @@ document.getElementById("calcBtn").addEventListener("click", async () => {
           if (result.debug) {
             coursesDiv.innerHTML = `<div style="font-size: 10px; max-height: 300px; overflow-y: auto;">${result.debug}</div>`;
           }
-        } else if (result.gpa) {
+        } else if (result.gpa !== null) {
           const { gpa, courses } = result;
           window.gpaCourses = courses; // save full courses globally for export
 
           resultDiv.textContent = `Your weighted GPA: ${gpa.toFixed(2)}`;
 
-          let html = "<table><tr><th>Course</th><th>Grade</th><th>Credits</th></tr>";
+          let html = "<table><tr><th>Course</th><th>Grade</th><th>Credits</th><th>Included?</th></tr>";
           courses.forEach(c => {
-            html += `<tr><td title="${c.courseName}">${c.courseName.substring(0, 30)}${c.courseName.length > 30 ? '...' : ''}</td><td>${c.grade}</td><td>${c.credits}</td></tr>`;
+            html += `<tr>
+              <td title="${c.courseName}">${c.courseName.substring(0, 30)}${c.courseName.length > 30 ? '...' : ''}</td>
+              <td>${c.grade}</td>
+              <td>${c.credits}</td>
+              <td>${c.included ? "Yes" : "No"}</td>
+            </tr>`;
           });
           html += "</table>";
           coursesDiv.innerHTML = html;
@@ -67,8 +72,12 @@ function findAndCalculateFromIframe() {
         const grade = parseFloat(gradeText);
         const credits = parseFloat(creditText);
 
-        if (!isNaN(grade) && !isNaN(credits) && credits > 0) {
-          rawCourses.push({ courseName, grade, credits });
+        if (!isNaN(grade) && !isNaN(credits)) {
+          if (courseName.toLowerCase().includes("zusatzmodul")) {
+            rawCourses.push({ courseName, grade, credits, included: false });
+          } else if (credits > 0) {
+            rawCourses.push({ courseName, grade, credits, included: true });
+          }
         }
       }
     });
@@ -85,6 +94,7 @@ function findAndCalculateFromIframe() {
           duplicate.courseName = c.courseName;
           duplicate.grade = c.grade;
           duplicate.credits = c.credits;
+          duplicate.included = c.included;
         }
       } else {
         courses.push(c);
@@ -97,8 +107,10 @@ function findAndCalculateFromIframe() {
 
     let totalWeighted = 0, totalCredits = 0;
     courses.forEach(c => {
-      totalWeighted += c.grade * c.credits;
-      totalCredits += c.credits;
+      if (c.included) {
+        totalWeighted += c.grade * c.credits;
+        totalCredits += c.credits;
+      }
     });
     let gpa = totalCredits > 0 ? totalWeighted / totalCredits : null;
 
@@ -121,9 +133,9 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   if (!courses.length) return;
 
   let csv = [];
-  csv.push(["Course", "Grade", "Credits"].join(","));
+  csv.push(["Course", "Grade", "Credits", "Included?"].join(","));
   courses.forEach(c => {
-    csv.push([c.courseName, c.grade, c.credits]
+    csv.push([c.courseName, c.grade, c.credits, c.included ? "Yes" : "No"]
       .map(val => `"${String(val).replace(/"/g, '""')}"`)
       .join(","));
   });
